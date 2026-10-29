@@ -1,0 +1,19 @@
+version: 2
+
+models:
+  - name: stg_books
+    description: Cleaned book data created from the raw scraper output.
+
+    columns:
+      - name: product_name
+        tests:
+          - not_null
+
+      - name: product_url
+        tests:
+          - not_null
+          - unique
+
+      - name: price_gbp
+        tests:
+          - not_null

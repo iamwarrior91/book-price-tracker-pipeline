@@ -1,0 +1,22 @@
+.venv/
+__pycache__/
+*.py[cod]
+.scrapy/
+data/raw/*.json
+!data/raw/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Scraped data exports
+data/raw/*.csv
+data/raw/*.json
+
+# dbt generated files
+price_tracker_dbt/target/
+price_tracker_dbt/logs/
+price_tracker_dbt/dbt_packages/
+
+# General logs
+logs/

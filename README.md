@@ -94,6 +94,8 @@ dbt test
 
 ## Dashboard
 
+![Book Price Tracker Dashboard](images/dashboard.png)
+
 The Power BI dashboard includes:
 
 - Number of books by rating

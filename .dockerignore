@@ -1,0 +1,6 @@
+.git/
+.venv/
+__pycache__/
+data/raw/*.csv
+price_tracker_dbt/target/
+price_tracker_dbt/logs/

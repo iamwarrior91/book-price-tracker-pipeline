@@ -29,6 +29,8 @@ price_tracker_pipeline/
 |- price_tracker/                # Scrapy project and book spider
 |  `- spiders/books_spider.py
 |- price_tracker_dbt/            # dbt models and tests
+|- Dockerfile                    # Container instructions for the scraper
+|- .dockerignore                 # Files excluded from the Docker build
 |- load_books.py                 # Loads CSV data into PostgreSQL
 |- requirements.txt
 |- scrapy.cfg
@@ -53,6 +55,20 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 scrapy crawl books -O data\raw\books.csv
+```
+
+## Run the Scraper with Docker
+
+Build the Docker image:
+
+```powershell
+docker build -t build-price-scraper .
+```
+
+Run the scraper container and save the CSV output to your local `data/raw` folder:
+
+```powershell
+docker run --rm -v "${PWD}\data\raw:/app/data/raw" build-price-scraper
 ```
 
 ## PostgreSQL Setup

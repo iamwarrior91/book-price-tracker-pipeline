@@ -1,19 +1,23 @@
 import csv
+import os
 from datetime import datetime
 from decimal import Decimal
 from getpass import getpass
 from pathlib import Path
 
 import psycopg
+from dotenv import load_dotenv
 
 
 CSV_PATH = Path("data/raw/books.csv")
 
+load_dotenv()
+
 DB_CONFIG = {
-    "host": "localhost",
-    "port": 5432,
-    "dbname": "price_tracker",
-    "user": "postgres",
+    "host": os.getenv("DB_HOST", "localhost"),
+    "port": int(os.getenv("DB_PORT", "5432")),
+    "dbname": os.getenv("DB_NAME", "price_tracker"),
+    "user": os.getenv("DB_USER", "postgres"),
 }
 
 
@@ -33,7 +37,7 @@ def load_books():
             f"Cannot find {CSV_PATH}. Run the Scrapy CSV export first."
         )
 
-    password = getpass("Enter your PostgreSQL password: ")
+    password = os.getenv("DB_PASSWORD") or getpass("Enter your PostgreSQL password: ")
 
     rows_to_insert = []
 

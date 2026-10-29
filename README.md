@@ -31,6 +31,8 @@ price_tracker_pipeline/
 |- price_tracker_dbt/            # dbt models and tests
 |- Dockerfile                    # Container instructions for the scraper
 |- .dockerignore                 # Files excluded from the Docker build
+|- compose.yaml                  # Docker PostgreSQL service definition
+|- .env.example                  # Database configuration template
 |- load_books.py                 # Loads CSV data into PostgreSQL
 |- requirements.txt
 |- scrapy.cfg
@@ -69,6 +71,23 @@ Run the scraper container and save the CSV output to your local `data/raw` folde
 
 ```powershell
 docker run --rm -v "${PWD}\data\raw:/app/data/raw" build-price-scraper
+```
+
+## Run PostgreSQL with Docker Compose
+
+Copy `.env.example` to `.env`, then replace both password values with the same private password.
+
+```powershell
+Copy-Item .env.example .env
+docker compose up -d
+```
+
+Docker starts a separate PostgreSQL database at `localhost:5433`. It does not change the existing local PostgreSQL database at `localhost:5432`.
+
+Check its status with:
+
+```powershell
+docker compose ps
 ```
 
 ## PostgreSQL Setup

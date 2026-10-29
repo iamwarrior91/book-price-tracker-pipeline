@@ -9,7 +9,7 @@ The pipeline scrapes 1,000 books, loads the data into PostgreSQL, cleans and sum
 ## Pipeline
 
 ```text
-Scrapy -> CSV -> Python -> PostgreSQL -> dbt -> Power BI
+Scrapy (Docker) -> CSV -> Python -> PostgreSQL (Docker Compose) -> dbt -> Power BI
 ```
 
 ## Tools Used
@@ -33,6 +33,7 @@ price_tracker_pipeline/
 |- .dockerignore                 # Files excluded from the Docker build
 |- compose.yaml                  # Docker PostgreSQL service definition
 |- .env.example                  # Database configuration template
+|- sql/init.sql                  # Creates the Docker raw_books table
 |- load_books.py                 # Loads CSV data into PostgreSQL
 |- requirements.txt
 |- scrapy.cfg
@@ -90,9 +91,15 @@ Check its status with:
 docker compose ps
 ```
 
-## PostgreSQL Setup
+With `DB_PORT=5433` in `.env`, run the loader to send `books.csv` to the Docker database:
 
-Create a database named `price_tracker`, then create the raw table:
+```powershell
+python load_books.py
+```
+
+## Local PostgreSQL Setup (Optional)
+
+The original local PostgreSQL version uses port `5432`. Create a database named `price_tracker`, then create the raw table:
 
 ```sql
 CREATE TABLE raw_books (
@@ -110,21 +117,30 @@ CREATE TABLE raw_books (
 
 ## Load Data into PostgreSQL
 
-Install the PostgreSQL Python adapter, then run the loader:
+Install project dependencies, then run the loader. The `.env` file controls whether it uses the local database (`5432`) or Docker database (`5433`).
 
 ```powershell
-python -m pip install "psycopg[binary]"
+python -m pip install -r requirements.txt
 python load_books.py
 ```
 
 ## Run dbt Models and Tests
 
-With your dbt PostgreSQL profile configured:
+For the original local database:
 
 ```powershell
 cd price_tracker_dbt
 dbt run
 dbt test
+```
+
+For the Docker PostgreSQL database, configure a `docker` output in `~/.dbt/profiles.yml` with port `5433`, then run:
+
+```powershell
+cd price_tracker_dbt
+dbt debug --target docker
+dbt run --target docker
+dbt test --target docker
 ```
 
 ## Dashboard

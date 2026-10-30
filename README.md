@@ -32,6 +32,7 @@ price_tracker_pipeline/
 |- Dockerfile                    # Container instructions for the scraper
 |- .dockerignore                 # Files excluded from the Docker build
 |- compose.yaml                  # Docker PostgreSQL service definition
+|- airflow/                      # Airflow Docker setup and orchestration DAG
 |- .env.example                  # Database configuration template
 |- sql/init.sql                  # Creates the Docker raw_books table
 |- load_books.py                 # Loads CSV data into PostgreSQL
@@ -155,6 +156,41 @@ After the Docker database is running and the dbt models have been built, connect
 6. Select **Close & Apply**, then select **Home -> Refresh**.
 
 The Docker database contains the same summary table structure as the local database, so the existing visuals can be refreshed without rebuilding them.
+
+## Orchestrate the Pipeline with Airflow
+
+The Airflow DAG runs the pipeline in this order:
+
+```text
+scrape_books -> load_books -> build_dbt_models -> test_dbt_models
+```
+
+Start the project PostgreSQL database from the project root first:
+
+```powershell
+docker compose up -d
+```
+
+Then prepare and start Airflow:
+
+```powershell
+cd airflow
+Copy-Item .env.example .env
+```
+
+Generate a Fernet key, copy its value into `FERNET_KEY` in `airflow/.env`, then run:
+
+```powershell
+python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+docker compose build
+docker compose up airflow-init
+docker compose up -d
+```
+
+Open `http://localhost:8080` and sign in with `airflow` / `airflow`. Find the `book_price_pipeline` DAG, unpause it if necessary, and select the play button to trigger a manual run.
+
+This Airflow Docker setup is intended for local learning and portfolio development, not production deployment.
+Its tasks reach the Docker PostgreSQL service through Docker Desktop at `host.docker.internal:5433`.
 
 ## Dashboard
 

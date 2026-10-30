@@ -72,9 +72,10 @@ def load_books():
 
     with psycopg.connect(**DB_CONFIG, password=password) as connection:
         with connection.cursor() as cursor:
+            cursor.execute("TRUNCATE TABLE raw_books RESTART IDENTITY;")
             cursor.executemany(insert_sql, rows_to_insert)
 
-    print(f"Success: loaded {len(rows_to_insert)} books into raw_books.")
+    print(f"Success: replaced raw_books with {len(rows_to_insert)} books.")
 
 
 if __name__ == "__main__":

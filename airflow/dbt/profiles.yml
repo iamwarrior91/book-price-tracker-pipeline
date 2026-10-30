@@ -1,0 +1,12 @@
+price_tracker_dbt:
+  outputs:
+    docker:
+      dbname: "{{ env_var('DB_NAME', 'price_tracker') }}"
+      host: host.docker.internal
+      pass: "{{ env_var('DB_PASSWORD') }}"
+      port: 5433
+      schema: analytics
+      threads: 1
+      type: postgres
+      user: "{{ env_var('DB_USER', 'postgres') }}"
+  target: docker

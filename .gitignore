@@ -1,5 +1,6 @@
 .venv/
 .env
+airflow/.env
 __pycache__/
 *.py[cod]
 .scrapy/
@@ -21,3 +22,4 @@ price_tracker_dbt/dbt_packages/
 
 # General logs
 logs/
+airflow/logs/

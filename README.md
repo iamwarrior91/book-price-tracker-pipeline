@@ -143,6 +143,19 @@ dbt run --target docker
 dbt test --target docker
 ```
 
+## Connect Power BI to Docker PostgreSQL
+
+After the Docker database is running and the dbt models have been built, connect Power BI to the summary table:
+
+1. Open the Power BI report and select **Home -> Transform data**.
+2. Select the `analytics.book_rating_summary` query.
+3. In **Applied Steps**, click the settings icon beside **Source**.
+4. Set the server to `localhost:5433` and keep the database as `price_tracker`.
+5. Sign in with the PostgreSQL user `postgres` and the private password from `.env`.
+6. Select **Close & Apply**, then select **Home -> Refresh**.
+
+The Docker database contains the same summary table structure as the local database, so the existing visuals can be refreshed without rebuilding them.
+
 ## Dashboard
 
 ![Book Price Tracker Dashboard](images/dashboard.png)

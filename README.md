@@ -192,6 +192,10 @@ Open `http://localhost:8080` and sign in with `airflow` / `airflow`. Find the `b
 This Airflow Docker setup is intended for local learning and portfolio development, not production deployment.
 Its tasks reach the Docker PostgreSQL service through Docker Desktop at `host.docker.internal:5433`.
 
+### Successful Airflow Run
+
+![Successful Airflow pipeline run](images/airflow-success.png)
+
 ## Dashboard
 
 ![Book Price Tracker Dashboard](images/dashboard.png)
